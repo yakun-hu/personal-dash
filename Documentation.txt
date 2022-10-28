@@ -1,0 +1,5 @@
+1) Due to limitations in default assoc.array-key,search <WP.MIC-H3S4,H4S6: https://www.wordpress.materialinchess.com/2022/10/25/h2s64-parsing-the-interchange-of-stringed-information-and-programming-information/
+I have to, for functions in which the key may or may not be present, nest the assoc.array-key,search inside an earlier array_key_exists conditional. This is
+a legacy inefficiency that I will patch if PHP adds supprot for false values in this default assoc.array-key,search. 
+Sites: dash-edit.php, post.post-number.php, where 'checked' and 'target=_blank' attributes are toggled, based on 
+column = attributes, respectively. 

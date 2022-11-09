@@ -19,6 +19,9 @@ for ($x = 1; $x <= 9; $x++) {
 		$attributes = $attributes . 'url' . $x . '=' . $_POST["target$x"] . ';';
 	}
 } 
+if (isset($_POST["private"])) {
+	$attributes = $attributes . 'private' . '=' . $_POST["private"] . ';';
+}
 $attributes = $attributes . 'null=null;';
 $sql = "UPDATE dash_{$_GET['author']}_posts SET notes='{$_POST["notes"]}' WHERE post_ID='{$_GET["post_ID"]}'";
 		$conn->query($sql);
@@ -39,6 +42,9 @@ header("Location: ../post.post-number.php?author={$_GET['author']}&post_ID={$_GE
 <!-- dev.live-url http://personal-dash/process-redir/edit-mysql-redir.php?author=blind&post_ID=1 -->
 
 <!-- Testing changelog, in reverse-chron
+4:50 AM 10/28/22: 
+	Added support for "private" attribute. Checks isset, outside of loop, and adds attribute, if =true. 
+		Test passed: No errors were made on 1-2 runs, attribute can be re-selected on edit page, upon re-visit. Db-entry checked, for that row, only. 
 17:25 10/26/22:
 	Added $attributes = $attributes . 'null=null;'; just before MySQL update, to ensure attributes column always filled. 
 	This meaningless | entry<Turing> ensures that no syntax errors, additionally, of a categorical type<Turing-2> will occur as a result. 

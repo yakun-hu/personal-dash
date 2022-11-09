@@ -1,6 +1,8 @@
 <?php 
 require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php'; 
 require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php'; 
+$back_author = $_GET['back_author'];
+$back_ID = $_GET['back_ID'];
 $session_username = $_SESSION['username'];
 $post_ID = highest_post_ID_sess() + 1;
 $post_title = $_POST["layer"] . '-dash: ' . $_POST["page_name"];
@@ -10,11 +12,29 @@ $sql = "INSERT INTO dash_{$session_username}_posts (post_ID, post_title, text1, 
 	$conn->query($sql); 
   // echo $sql; 
   echo $conn->error;
-header("Location: http://personal-dash/dash-edit.php?author=$session_username&post_ID=$post_ID"); 
+if(isset($_POST['forward'])) {
+	$num = $_POST['forward']; 
+	// echo $num; 
+	$url = 'http://personal-dash/post.post-number.php?author=' . $session_username . '&post_ID=' . $post_ID; 
+	$sql = "UPDATE dash_{$session_username}_posts SET url$num='$url', text$num='{$_POST["page_name"]}'  WHERE post_ID=$back_ID";
+	$conn->query($sql);
+	echo $conn->error;
+}
+header("Location: http://personal-dash/dash-edit.php?author=$session_username&post_ID=$post_ID&back_author=$back_author&back_ID=$back_ID"); 
 ?>
 
 <!-- Dev-url: http://personal-dash/process-redir/page.insert-redir.php -->
-<!-- Testing-log: 
+<!-- Testing-log:
+	10:37 AM 11/6/22:
+		Added isset check for ($_POST['forward']); if passed, $num declared, and
+		sql UPDATE made, to add url$num and text$num to $back_ID post, for $session_username author. 
+		Test: Link should be added to previous page, upon "Add" click, if checkbox is checked, for adding a forward link. 
+		The link should be clickable # to the correct, new page, that was just added. 
+			Test passed. 
+	4:03 AM 11/5/22:
+		Added 2 variable declarations for $backs, using $_GET['backs']
+		Propagated forward into header redirect to dash-edit, 2 new get params, at the end, for backs. 
+			Test passed: next url has 4 params, including the 2 backs, appended to the end. 
 	00:09 AM 10/27/22:
 		Added support for 'attributes' column, added a default value 'null=null;' to avoid empty array errors. 
 			Test passed. Page inserted, no error. 

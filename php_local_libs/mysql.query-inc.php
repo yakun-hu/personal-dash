@@ -45,9 +45,71 @@ function attributes_parse($post_author_username, $post_ID) {
 	}
 	return $attributes_assoc_array;
 }
+/* This function will be called 9x every time post.post-number loads; monitor its E on load-times
+https://www.wordpress.materialinchess.com/2022/10/13/h2s34-speed-optimizations-for-wordpress/ */
+function check_private($url) {
+	strtolower($url);
+	if (str_contains($url, 'personal-dash')) {  
+		$strpos = strpos($url, '?') + 1; 
+		$substr = substr($url, $strpos, null); 
+		strtok($substr, '=');
+		$post_author_username = strtok('&');
+		// echo $post_author_username;
+		strtok('=');
+		$post_ID = strtok('');
+		// echo $post_ID;
+		$attributes = attributes_parse($post_author_username, $post_ID); 
+		if (array_key_exists("private", $attributes)) { 
+			if ($attributes["private"] == "true") {
+				return true;
+			}
+		} 
+	}
+} 
+function empty_link_slot($author, $post_ID) {
+	$num = 0;
+	$empty_link_found = false; 
+	while($empty_link_found == false && $num < 9) {
+		// Incremeter micro-tested<below>: test-passed. 
+		$url_num = 'url' . ++$num;
+		$text_num = 'text' . $num;
+		$url = select_single_grid($author, $post_ID, $url_num); 
+		$text = select_single_grid($author, $post_ID, $text_num); 
+		if($url == "" && $text == "") {
+			$empty_link_found = true;
+			/* Page.create-form will handle the returned $num to display link #
+			and if user selects to add the forward link, pass $num to the insert-redir*/
+			return $num; 
+		} 
+	}
+	return 'null'; 
+} 
+function full_users_tb_select() {
+	$sql = "SELECT username FROM users_tb"; 
+	global $conn; 
+	$result = $conn->query($sql); 
+	return $result; 
+} 
+function fetch_password($username) {
+	$sql = "SELECT password FROM users_tb WHERE username='$username'"; 
+	global $conn; 
+	$result = $conn->query($sql); 
+	$row = $result->fetch_assoc();
+	return $row['password']; 
+}
 ?>
 <!-- test-url: http://personal-dash/php_local_libs/mysql.query-inc.php --> 
 <!-- test-changelog: 
+	4:44 AM: added fetch_password() {
+		var_dump remotely retrievs an obj, displays the password string. 
+	4:21 AM: added full_users_tb_select() { 
+		var_dump remotely retrieves an obj, field_count=1, num_rows=2. 
+	9:47 AM 11/6/22:
+		Added function empty_link_slot from empty.link-slot,test.php
+			Test passed: require file calls this function, same output. 
+	6:56 AM 10/28/22: 
+		Added function check_private($url) {, returns true, if the passed URL has private setting, true. 
+		Test: 
 	3:11 AM 10/26/22:
 		Added function attributes_parse, which was tested in link.target-check,box.test-4.php 
 		Test passed: attribute successfully retrieved, when dash-edit loads. 

@@ -3,3 +3,6 @@ I have to, for functions in which the key may or may not be present, nest the as
 a legacy inefficiency that I will patch if PHP adds supprot for false values in this default assoc.array-key,search. 
 Sites: dash-edit.php, post.post-number.php, where 'checked' and 'target=_blank' attributes are toggled, based on 
 column = attributes, respectively. 
+
+2) Migration to web steps: 
+a) In php_local_libs/mysql.query-inc.php, I need to change the string-search URL domain from personal-dash to dash.materialinchess.com #

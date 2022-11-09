@@ -28,7 +28,7 @@ if ($output == 1) {
 <a href="../process-redir/log.out-redir">Log-out</a>
 <?php }
 else { ?>
-<a href="../login.php">Log-in</a>
+<a href="../login.php">Log-in</a> | <a href="../register.php">Register</a>
 <?php } ?>
 
 <div class="instructions">
@@ -39,6 +39,9 @@ mental.load-pre,click[Turing].</div>
 
 </body></html>
 <!-- Testing changelog, in reverse-chron
+5:22 AM 11/08/22:
+	Added registration button to register.php, echoes conditionally with log-in. 
+		Test passed: button appears to the right of log-in, and goes to the correct destination. 
 1:03 AM 10/27/22:
 	Added <div class="instructions"> with basic styling #, first note. 
 		Test passed: Formatting is correct, test displayed, looks good. 

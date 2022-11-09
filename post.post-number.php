@@ -20,6 +20,15 @@ require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php';
 include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
 require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php';
 $attributes = attributes_parse($_GET['author'], $_GET['post_ID']); 
+// Immediate redir will be placed here #
+$check_edit_perm_bool = check_edit_perm($_GET['author']);
+if ($check_edit_perm_bool != 1) {
+	if (array_key_exists("private", $attributes)) { 
+		if ($attributes["private"] == "true") {
+			header("Location: http://personal-dash/index.php");
+		}
+	}
+}
 // require 'db-lib.php'; shelved for the moment due to #  Notice: Undefined variable: conn in C:\wamp64\www\personal-dash\db-lib.php on line 7
 $post_author_username = $_GET['author'];
 $post_ID = $_GET['post_ID'];
@@ -28,19 +37,17 @@ $post_ID = $_GET['post_ID'];
 <!-- After implementing $post_ID, and URL appends, the next link will need to call the $post_ID variable, as an append #  -->
 <p><a href="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url');?>">Back</a> |
 <a <?php 
-$output = check_edit_perm($post_author_username);
-if ($output != 1) {
+if ($check_edit_perm_bool != 1) {
 	echo 'hidden';
 }
 ?> href="dash-edit.php?author=<?php echo $post_author_username; ?>&post_ID=<?php echo $post_ID; ?>"> Edit</a> | 
 <a <?php 
-$output = logged_in_binary(); 
-if ($output != 1) {
+$logged_in_binary_bool = logged_in_binary(); 
+if ($logged_in_binary_bool != 1) {
 	echo 'hidden';
 }
-?> href="page.create-form.php">(+) New-page</a> | 
-<?php $output = logged_in_binary(); 
-if ($output == 1) {?>
+?> href="page.create-form.php?back_author=<?php echo $post_author_username; ?>&back_ID=<?php echo $post_ID; ?>">(+) New-page</a> | 
+<?php if ($logged_in_binary_bool == 1) {?>
 <a href="../process-redir/log.out-redir">Log-out</a>
 <?php }
 else { ?>
@@ -56,7 +63,15 @@ while ($row_count_3 <= 3) {
 		$count_container = $column_count_3++;
 		$url_column = 'url' . ++$entry_count_9; 
 		$text_column = 'text' . $entry_count_9; ?>
-			<td><?php echo $entry_count_9; ?>: <a href="<?php echo select_single_grid($post_author_username, $post_ID, $url_column);?>" data-type="URL" <?php if (array_key_exists("url$entry_count_9", $attributes)) { 
+			<td><?php echo $entry_count_9; ?>: 
+
+<?php $url = select_single_grid($post_author_username, $post_ID, $url_column);
+if (check_private($url) && $check_edit_perm_bool != 1) {
+	echo "🔒:";
+	} else {
+?>
+<!-- check_private controller target start -->			
+			<a href="<?php echo $url;?>" data-type="URL" <?php if (array_key_exists("url$entry_count_9", $attributes)) { 
 			if ($attributes["url$entry_count_9"] == "_blank") {
 	echo 'target="_blank"';
 	$internal = 'off';
@@ -69,13 +84,46 @@ while ($row_count_3 <= 3) {
 				if ($internal == 'on') { 
 			echo '[i]'; 
 			}
-		} ?></td>
+		} 
+	} ?>
+<!-- controller target end -->		
+</td>
 <?php }?></tr><?php }?></table>
 <h3>Notes:</h3>
 <p style="width:400px"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></p>
 </body></html>
 <!-- dev.live-URL http://personal-dash/post.post-number.php?author=blind&post_ID=1 -->
 <!-- Testing changelog, in reverse-chron:
+3:55 AM 11/5/22:
+	Changed name of URL gets to back_author, back_ID. 
+		Test passed: URL get params changed, successfully. 
+3:26 AM 11/5/22:
+	Added author_name and post_ID gets to URL -> page.create-form.php
+		Test passed: author param w/ name, and post_ID w/ #, propagated to URL. 
+7:28 AM 10/28/22:
+	$output for check_edit_perm function call, replaced with $check_edit_perm_bool, and this variable is called, in subsequent iterations. 
+	Test:
+		Header redirect: Working. 
+		Display of edit icon: Working. 
+		check_private control, co-condition #: Working. 
+	$output for logged_in_binary function call, replaced with $logged_in_binary_bool, and this variable is called, in subsequent iterations. 
+	Test:
+		Display of new page icon, toggle: Working. 
+		Logged in / out toggle: Working. 
+7:13 AM 10/28/22: 
+	Added function call to check_private, located in mysql.query-inc
+	Echos a lock icon if the post is private, else displays the regular link, and link text. 
+	Test:
+		Using post_ID=34 as the private post, and post_ID=22 which links it, tested binary if post_ID=34 is set to private. 
+		Test passed:
+			Lock icon is shown, and is not clickable, if post_ID=34 is private, on post_ID=22. 
+			Regular clickable title and text are shown, otherwise. 
+		Added support for check_edit_perm, if $output != 1 clause added, as an add-append<Turing> to the 
+		check_private conditional control. 
+		Test passed: 
+			When post is private, the title is still shown, from a linking page #, if author is logged in, and viewing that linking page #
+			When post is private, lock is shown, in the preceding circumstance, if another user, or visitor. 
+			When post is public, visitors can also see the title, on the linking page. 
 1:15 AM 10/27/22:
 	Added new page button, for logged-in visitors only. 
 		Test passed: Button displayed, leads to correct destination # 

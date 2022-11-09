@@ -1,0 +1,3 @@
+Incubate: automatically scrape a website by grabbing its HTML for URLs, populate a list in the "add-URL" page, easily create new pages in bulk, and add to old pages. 
+
+Incubate: sometimes I want to do a quick soundboard, and bounce back, but I'm in a deep layer # 

@@ -6,3 +6,18 @@ column = attributes, respectively.
 
 2) Migration to web steps: 
 a) In php_local_libs/mysql.query-inc.php, I need to change the string-search URL domain from personal-dash to dash.materialinchess.com #
+
+Features:
+
+Incubate: automatically scrape a website by grabbing its HTML for URLs, populate a list in the "add-URL" page, easily create new pages in bulk, and add to old pages. 
+Incubate: sometimes I want to do a quick soundboard, and bounce back, but I'm in a deep layer # 
+
+12.31-22,4th.21: Add a grid to index.php for dash with 2 divs: left, and an Inner.RAM-Main with a 10th-listicle<temp>
+
+Bugs:
+
+1) $post_ID = 8: the home page historically is set to post_ID=8; in order to change to 1, all BACK-URLs or the 9<max>that link it # should be updated at once: should I do this prog?
+
+Issues:
+
+1) How to set default txt<v-t>to<p>font-params in Notes?

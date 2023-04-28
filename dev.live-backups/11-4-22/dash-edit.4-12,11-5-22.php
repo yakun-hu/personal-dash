@@ -12,10 +12,6 @@ if ($check_edit_perm_bool != 1) {
 require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php';
 require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php'; 
 $attributes = attributes_parse($_GET['author'], $_GET['post_ID']); 
-if (isset($_GET['back_author'])) {
-	$back_author = $_GET['back_author'];
-	$back_ID = $_GET['back_ID'];
-}
 // print_r($attributes); ?>
 <body><h1>Dash-edit.php</h1>
 <a href="post.post-number.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>">Cancel</a> | 
@@ -29,11 +25,7 @@ Private: <input type="checkbox" id="private" name="private" <?php if (array_key_
 	echo "checked";
 	}
 }?> value="true">
-<p>Back_url: <input type="text" name="back_url" value="<?php if (isset($_GET['back_author'])) {
-echo 'http://personal-dash/post.post-number.php?&author=' . $back_author . '&post_ID=' . $back_ID;
-} else { ?>
-<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url'); 
-} ?>" minlength="1" maxlength="99"></p>
+<p>Back_url: <input type="text" name="back_url" value="<?php echo 'http://personal-dash/post.post-number.php?author=blind&post_ID=32';?><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url'); ?>" minlength="1" maxlength="99"></p>
 <table><tr><th>Rank#</th><th>Text-field</th><th>URL-field</th><th>New-tab</th></tr>
 <?php for ($x = 1; $x <= 9; $x++) {
 	$url_column = 'url' . $x;
@@ -51,25 +43,13 @@ echo 'http://personal-dash/post.post-number.php?&author=' . $back_author . '&pos
 }?> value="_blank"></td></tr>
 <?php }?></table><input type="submit" name="submit" value="Save"><br><br>
 Notes:<br>
-<textarea style="width:400px;min-height:200px;vertical-align: top;" type="text" id="notes" name="notes" minlength="1" maxlength="2000000"><?php
+<textarea style="width:400px;min-height:200px;vertical-align: top;" class="notes" type="text" id="notes" name="notes" minlength="1" maxlength="2000000"><?php
   // the updated text is not displayed, immediately after clicking save; the page has to be refreshed
   // however, I can circumvent this, by re-directing users back to the display page, following refresh # 
 	echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></textarea>
 </form></body></html>
 <!-- dev.live-URL http://personal-dash/dash-edit.php?author=blind&post_ID=1 -->
-<!-- issues-list
-	$back_author is traced from a ghost-redir and requires from retri to swap<MIC># 
 <!-- Testing changelog, in reverse-chron:
-4:16 AM 11/5/22:
-	Added 2 get declarations for $backs
-	Added a second, non-redundant echo in the value attribute of Back_url form, using $backs. 
-	Added 2 isset checks, both for $_GET['back_author']), that controls 
-	1) the $backs variable declarations, since page returns an error, if $_GET when empty #
-	2) echo if the new $backs-based URL string, to avoid redundant URL. 
-	Test passed:
-		URL pre-filled in back_url, following redirect from page.insert-redir
-		http://personal-dash/post.post-number.php?&author=blind&post_ID=32
-		No redundancy, when page is revisted, from post.post_number. 
 4:49 AM 10/28/22: 
 	Added  checkbox for toggling post to private, checked = true. Push value true to $_POST["private"] to edit.mysql-redir.php
 		Test passed: Checkbox displayed, can be checked. 

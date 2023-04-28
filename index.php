@@ -1,92 +1,42 @@
-<h1>Index-page:</h1>
+<h1>The 21st-century filing cabinet(2):</h1>
 <?php 
 include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
 require 'C:\wamp64\www\personal-dash\php_local_libs\testing-inc.php'; 
-echo "Your username: ", sess_super_username_check(); 
+echo "<p>Your username: ", sess_super_username_check() . "</p>"; 
 ?>
-<html><head><style>
-.instructions {
-	width:400px
-}</style></head><body><br><br>
+<html><head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
+  <link rel="stylesheet" href="php_local_libs/CSS-external.php"><style>
+  <title>Dash-Index</title><link rel="icon" type="image/x-icon" href="CHE_favicon.ico"><style><!-- Favicon<see-refs>feature not loading, yet-->
+<!-- Grid adjacency not working yet 12.31-22,4th.21-->
+.instructions { grid-area: instructions; background-color: #FFFFFF; text-align: center; border-style: solid; border-width: 3px; border-color: #1F1F1F;}
+.RAM { grid-area: RAM; background-color: #25438B; color:FFFFFF; margin-top: 10px; border-style: solid; border-width: 1px; border-color: #1F1F1F; padding:10px;}
+.grid-container { display: grid; grid: 'instructions RAM'; grid-gap: 1px; padding: 10px; height: 600px; width: 1000px; grid-template-rows: 600px; grid-template-columns: 3fr 1fr; text-align: left;}</style></head><body>
   <script src="script.js"></script>
-<a <?php 
-$output = logged_in_binary(); 
-if ($output != 1) {
-	echo 'hidden';
-}
-?> href="page.create-form.php">(+) New-page | </a>
-<a <?php 
-$output = logged_in_binary(); 
-if ($output != 1) {
-	echo 'hidden';
-}
-?> href="page-list.php">Page-list | </a>
-<?php 
-$output = logged_in_binary(); 
-if ($output == 1) {
-?>
-<a href="../process-redir/log.out-redir">Log-out</a>
-<?php }
-else { ?>
-<a href="../login.php">Log-in</a> | <a href="../register.php">Register</a>
-<?php } ?>
-
-<div class="instructions">
-<h2>Instructions for use:</h2>
+<p><a <?php $output = logged_in_binary(); if ($output != 1) { echo 'hidden'; } ?> href="page.create-form.php">(+) New-page | </a>
+<a <?php $output = logged_in_binary(); if ($output != 1) { echo 'hidden'; } ?> href="page-list.php">Page-list | </a>
+<?php $output = logged_in_binary(); if ($output == 1) { ?><a href="../process-redir/log.out-redir">Log-out</a> | 
+<a href="post.post-number.php?author=<?php echo $_SESSION['username']; ?>&post_ID=8">Pg.数-1</a><?php } else { ?><!-- See refs for "$post_ID=8" issue -->
+<a href="../login.php">Log-in</a> | <a href="../register.php">Register</a><?php } ?></p>
+<div class="instructions"><h2>Instructions for use:</h2>
 <p> 1) 1: Job.app-notes[G-docs][2022] add mini-tags with [brackets] in the text-field
 to help yourself # remember the destination category. This will minimize
-mental.load-pre,click[Turing].</div>
-
-</body></html>
-<!-- Testing changelog, in reverse-chron
-5:22 AM 11/08/22:
-	Added registration button to register.php, echoes conditionally with log-in. 
-		Test passed: button appears to the right of log-in, and goes to the correct destination. 
-1:03 AM 10/27/22:
-	Added <div class="instructions"> with basic styling #, first note. 
-		Test passed: Formatting is correct, test displayed, looks good. 
-2:17 AM 10/23/22:
-	Page-list link added, with conditional control. 
-		Link is only displayed, when users are logged in. ✔️
-		Clicking on the link, leads to the correct destination. ✔️
-	Hard-coded link to post_ID=1 page deleted. ✔️
-		Page elements still load 
-16:09 PM 10/22/22:
-	(+) New-page button added, same-lined as Log buttons. 
-	Test: 	
-		Displays when user is logged in: ✔️
-		Does not display when user is logged out ✔️
-6:29 AM 10/22/22:
-	Testing code update from Dr. Dunkle: https://wpbuffalo.slack.com/archives/C16QJHY2V/p1666363226103579
-		The implementation disregards the hidden attribute and displays the buttons conditionally
-		based on an if / else control, however, it leaves the HTML code completely outside of the php-tag,
-		which frees up an additional level of php-encap, for other attributes, later. 
-			Logged-out, log-in is displayed ✔️
-			Logged-in, log-out is displayed ✔️
-		I took the code snippet completely outside of HTML tags, by moving </body> and </html> up, and 
-		deleting the <p> encapsulation, and the function of code was unaffected. 
-			Test-passed. 
-6:29 AM 10/21/22:
-	Bulk changes: 
-		session_start(); removed
-		include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php'; added, to top-php
-		Log-in button removed. 
-		Conditional log.in/out added from log.out-button,test.php
-		Test: 
-			Log-out displayed when logged-in to 'blind': ✔️
-			Log-out clicked, logs-out ✔️
-			Log-in is now displayed, with logged.out-status ✔️
-			Page display still normal ✔️
-			Log-in link works ✔️
-			Personal-dash link works ✔️
-4:35 AM 10/21/22:
-	require 'C:\wamp64\www\personal-dash\php_local_libs\testing-inc.php';  added. 
-	sess_super_username_check() swapped in for $_SESSION['username'] in my username.display-echo,test. 
-		Test passed. 
-22:18 PM 10/20/22:
-	First php-encap added. 
-	session_start(); added. 
-00:51 AM 10/20/22:
-	<p>1: URL updated
-	Click, links to http://personal-dash/post.post-number.php?author=blind&post_ID=1
-	Test passed. -->
+mental.load-pre,click[Turing].
+<br> 2) https://www.youtube.com/watch?v=avHo0-qU8xo 5:58 </div>
+<div class="RAM" style=""><h1>Inner.RAM-Main:</h1>
+<ol><li><p><a style="color:FFFFFF" href="post.post-number.php?author=blind&post_ID=352">Project-Management</a></p></li>
+<li><p>4.<a style="color:FFFFFF" href="post.post-number.php?author=blind&post_ID=231">Textbooks-all</a></p></li>
+<li><p><a style="color:FFFFFF" href="http://chess/chess-website.txt">WAMP-chess</a></p></li>
+<li><p><a style="color:FFFFFF" href="post.post-number.php?author=blind&post_ID=355">Car-safety</a></p></li>
+<li><p><a style="color:FFFFFF" href="post.post-number.php?author=blind&post_ID=350">CN,ENG</a></p></li>
+<li><p><a style="color:FFFFFF" href="post.post-number.php?author=blind&post_ID=359">Tencent-Cloud</a></p></li>
+</ol></body></html>
+<!-- test-url: http://personal-dash/index.php -->
+<!-- issues-list-->	
+<!-- Testing changelog, in reverse-chron-->
+<!-- References:
+12.31-22,4th.24: $post_ID=8 issue: see documentation.txt in p.dash-main/ 
+Earlier: Favicon feature:
+https://www.w3schools.com/html/html_favicon.asp
+https://perishablepress.com/everything-you-ever-wanted-to-know-about-favicons/<50% accuracy> -->

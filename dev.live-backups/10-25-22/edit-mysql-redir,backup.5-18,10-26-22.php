@@ -15,14 +15,9 @@ for ($x = 1; $x <= 9; $x++) {
 	$sql = "UPDATE dash_{$_GET['author']}_posts SET url$x='$url_column_input' WHERE post_ID='{$_GET["post_ID"]}'";
 		$conn->query($sql);
 		echo $conn->error;
-	if (isset($_POST["target$x"])) {
-		$attributes = $attributes . 'url' . $x . '=' . $_POST["target$x"] . ';';
-	}
+	$attributes = $attributes . 'url' . $x . '=' . $_POST["target$x"] . ';';
 } 
-if (isset($_POST["private"])) {
-	$attributes = $attributes . 'private' . '=' . $_POST["private"] . ';';
-}
-$attributes = $attributes . 'null=null;';
+// echo $attributes; 
 $sql = "UPDATE dash_{$_GET['author']}_posts SET notes='{$_POST["notes"]}' WHERE post_ID='{$_GET["post_ID"]}'";
 		$conn->query($sql);
 		echo $conn->error;
@@ -42,21 +37,6 @@ header("Location: ../post.post-number.php?author={$_GET['author']}&post_ID={$_GE
 <!-- dev.live-url http://personal-dash/process-redir/edit-mysql-redir.php?author=blind&post_ID=1 -->
 
 <!-- Testing changelog, in reverse-chron
-10:57 AM 12/19/22:
-	WP.MIC-H2S39,H3S8.H4S1-2 for the apostrophe UPDATE error: https://www.wordpress.materialinchess.com/2022/10/16/h2s39-troubleshooting-library/
-4:50 AM 10/28/22: 
-	Added support for "private" attribute. Checks isset, outside of loop, and adds attribute, if =true. 
-		Test passed: No errors were made on 1-2 runs, attribute can be re-selected on edit page, upon re-visit. Db-entry checked, for that row, only. 
-17:25 10/26/22:
-	Added $attributes = $attributes . 'null=null;'; just before MySQL update, to ensure attributes column always filled. 
-	This meaningless | entry<Turing> ensures that no syntax errors, additionally, of a categorical type<Turing-2> will occur as a result. 
-		Test passed: http://personal-dash/post.post-number.php?author=blind&post_ID=6
-		which previously had a blank attributes column, now does not return undefined variable: attributes_assoc_array error, nor the dash-edit.php? version
-5:50 AM EDT 10/26/22:
-	Made a slight change to input, that only adds an attribute instance, if there is checkbox entry, leading to a more concise db-entry:
-	Added isset() check to $attributes concatenation within the loop. 
-		Test passed: blank inputs eliminated from db-entry, ie url1=_blank;url3=_blank;url5=_blank;
-		Dependendy testing pending<mbno><fbno>
 4:07 AM EDT, 10/25/22:
 	Support for 'back_url' and 'post_title' column input added, outside of loop #
 		Test passed: 'back_url' and 'post_title' columns successfully updated, accurately, with input from dash-edit. 

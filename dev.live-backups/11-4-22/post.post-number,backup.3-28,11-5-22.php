@@ -1,13 +1,21 @@
+<html><head>
 <!-- in-line styling can also be applied, with php-encap<Turing!> to provide
 dynamic coloring, and other in-grid patterns, while keeping main squares -->
-<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
-  <link rel="stylesheet" href="php_local_libs/CSS-external.php"><style>
-table { border-collapse: collapse; }
-tr { height: 150px; }
-td { border: 1px solid #dddddd; text-align:left; width:130px; padding: 10px; }
-</style></head><body style="background-color:e6e0fc"><script src="script.js"></script>
-<?php // Global requirements, for this script #, and variable declarations #:
+<style>
+table {
+	border-collapse: collapse;
+}
+tr {
+	height: 150px;
+}
+td {
+	border: 1px solid #dddddd;
+	text-align: left;
+	width: 150px;
+}
+</style></head><body><script src="script.js"></script>
+<?php 
+// Global requirements, for this script #, and variable declarations #:
 require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php'; 
 include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
 require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php';
@@ -22,27 +30,33 @@ if ($check_edit_perm_bool != 1) {
 	}
 }
 // require 'db-lib.php'; shelved for the moment due to #  Notice: Undefined variable: conn in C:\wamp64\www\personal-dash\db-lib.php on line 7
-/* 淘汰: $post_author_username = $_GET['author'];
- $post_ID = $_GET['post_ID']; */
+$post_author_username = $_GET['author'];
+$post_ID = $_GET['post_ID'];
 ?>
-  <h3><?php echo 'Page-name: ' . select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); ?></h3>
+  <h1><?php echo 'Page-name: ' . select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); ?></h1>
 <!-- After implementing $post_ID, and URL appends, the next link will need to call the $post_ID variable, as an append #  -->
 <p><a href="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url');?>">Back</a> |
-<a <?php if ($check_edit_perm_bool != 1) { 	echo 'hidden'; }?> 
-href="dash-edit.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>"> Edit</a> | 
-<a <?php $logged_in_binary_bool = logged_in_binary(); 
-if ($logged_in_binary_bool != 1) { echo 'hidden'; } ?> 
-href="page.create-form.php?back_author=<?php echo $_GET['author']; ?>&back_ID=<?php echo $_GET['post_ID']; ?>">(+) New-page</a> | 
+<a <?php 
+if ($check_edit_perm_bool != 1) {
+	echo 'hidden';
+}
+?> href="dash-edit.php?author=<?php echo $post_author_username; ?>&post_ID=<?php echo $post_ID; ?>"> Edit</a> | 
+<a <?php 
+$logged_in_binary_bool = logged_in_binary(); 
+if ($logged_in_binary_bool != 1) {
+	echo 'hidden';
+}
+?> href="page.create-form.php">(+) New-page</a> | 
 <?php if ($logged_in_binary_bool == 1) {?>
 <a href="../process-redir/log.out-redir">Log-out</a>
 <?php }
 else { ?>
 <a href="../login.php">Log-in</a>
-<?php } ?> | <a href="index.php">Index</a> | <a href="https://www.baidu.com/" target="_blank">Baidu</a></p>
-<table style="border-width:2px;border-style:solid;border-color:#2a2a2a;background-color:f1eff9; padding:2px"><?php $entry_count_9 = 0;
+<?php } ?> | <a href="index.php">Index</a></p>
+<table><?php $entry_count_9 = 0;
 $row_count_3 = 1;
 while ($row_count_3 <= 3) {
-	$count_container_2 = $row_count_3++;?><tr style="border-bottom:2px solid #b3b3b3"><?php
+	$count_container_2 = $row_count_3++;?><tr><?php
 	$column_count_3 = 1; 
 	while ($column_count_3 <= 3) {
 		// echo $entry_count_9;
@@ -51,8 +65,11 @@ while ($row_count_3 <= 3) {
 		$text_column = 'text' . $entry_count_9; ?>
 			<td><?php echo $entry_count_9; ?>: 
 
-<?php $url = select_single_grid($_GET['author'], $_GET['post_ID'], $url_column);
-if (check_private($url) && $check_edit_perm_bool != 1) { echo "🔒:";	} else { ?>
+<?php $url = select_single_grid($post_author_username, $post_ID, $url_column);
+if (check_private($url) && $check_edit_perm_bool != 1) {
+	echo "🔒:";
+	} else {
+?>
 <!-- check_private controller target start -->			
 			<a href="<?php echo $url;?>" data-type="URL" <?php if (array_key_exists("url$entry_count_9", $attributes)) { 
 			if ($attributes["url$entry_count_9"] == "_blank") {
@@ -62,22 +79,21 @@ if (check_private($url) && $check_edit_perm_bool != 1) { echo "🔒:";	} else { 
 } else {
 	$internal = 'on';
 	}
- ?> ><?php $display_text = select_single_grid($_GET['author'], $_GET['post_ID'], $text_column); echo $display_text?></a>
-<?php if ($display_text != "") { if ($internal == 'on') { echo '[i]'; } else { echo '↗️'; } } } ?>
-<!-- controller target end --></td><?php }?></tr><?php }?></table>
-<h3>Notes:</h3><div style="width:420px;background-color:f1eff9;padding:10px"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></div></body></html>
-<title><?php $title = select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); $discard = strtok($title, ":"); echo strtok(":"); ?></title><!-- Condense this later -->
+ ?> ><?php $display_text = select_single_grid($post_author_username, $post_ID, $text_column);
+			echo $display_text?></a><?php if ($display_text != "") {
+				if ($internal == 'on') { 
+			echo '[i]'; 
+			}
+		} 
+	} ?>
+<!-- controller target end -->		
+</td>
+<?php }?></tr><?php }?></table>
+<h3>Notes:</h3>
+<p style="width:400px"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></p>
+</body></html>
 <!-- dev.live-URL http://personal-dash/post.post-number.php?author=blind&post_ID=1 -->
-<!-- Issue-list:
-	12.31-22,4th.22: Resolved: Notes-body was encapsulated in <p>, broken by any double-ended HTML; replaced these <p>en-caps with <div>, fixed # 
-	Adding a padding of 10px to all<td>expanded each grid width by 20; decreasing<td>width to 130 restored the original proportions #hack 😱-->
 <!-- Testing changelog, in reverse-chron:
-3:55 AM 11/5/22:
-	Changed name of URL gets to back_author, back_ID. 
-		Test passed: URL get params changed, successfully. 
-3:26 AM 11/5/22:
-	Added author_name and post_ID gets to URL -> page.create-form.php
-		Test passed: author param w/ name, and post_ID w/ #, propagated to URL. 
 7:28 AM 10/28/22:
 	$output for check_edit_perm function call, replaced with $check_edit_perm_bool, and this variable is called, in subsequent iterations. 
 	Test:

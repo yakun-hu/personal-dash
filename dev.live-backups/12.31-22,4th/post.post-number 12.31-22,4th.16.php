@@ -62,14 +62,18 @@ if (check_private($url) && $check_edit_perm_bool != 1) { echo "🔒:";	} else { 
 } else {
 	$internal = 'on';
 	}
- ?> ><?php $display_text = select_single_grid($_GET['author'], $_GET['post_ID'], $text_column); echo $display_text?></a>
-<?php if ($display_text != "") { if ($internal == 'on') { echo '[i]'; } else { echo '↗️'; } } } ?>
-<!-- controller target end --></td><?php }?></tr><?php }?></table>
-<h3>Notes:</h3><div style="width:420px;background-color:f1eff9;padding:10px"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></div></body></html>
-<title><?php $title = select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); $discard = strtok($title, ":"); echo strtok(":"); ?></title><!-- Condense this later -->
+ ?> ><?php $display_text = select_single_grid($_GET['author'], $_GET['post_ID'], $text_column);
+			echo $display_text?></a><?php if ($display_text != "") {
+				if ($internal == 'on') { 
+			echo '[i]'; 
+			}
+		} 
+	} ?>
+<!-- controller target end -->		
+</td><?php }?></tr><?php }?></table>
+<h3>Notes:</h3><p style="width:400px;background-color:f1eff9"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></p></body></html>
 <!-- dev.live-URL http://personal-dash/post.post-number.php?author=blind&post_ID=1 -->
 <!-- Issue-list:
-	12.31-22,4th.22: Resolved: Notes-body was encapsulated in <p>, broken by any double-ended HTML; replaced these <p>en-caps with <div>, fixed # 
 	Adding a padding of 10px to all<td>expanded each grid width by 20; decreasing<td>width to 130 restored the original proportions #hack 😱-->
 <!-- Testing changelog, in reverse-chron:
 3:55 AM 11/5/22:

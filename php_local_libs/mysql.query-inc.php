@@ -1,50 +1,36 @@
 <?php
-if(session_status() === PHP_SESSION_NONE) {
-	session_start();
-}
-require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php'; 
-function highest_post_ID_sess() {
+require 'db.conn-inc.php'; 
+function highest_post_ID_sess($table_n) {
 	$session_username = $_SESSION['username'];
-	$sql = "SELECT post_ID FROM dash_{$session_username}_posts ORDER BY post_ID DESC LIMIT 1"; 
+	$sql = "SELECT post_ID FROM {$table_n} ORDER BY post_ID DESC LIMIT 1"; 
 	global $conn; 
 	$result = $conn->query($sql); 
 	$row = $result->fetch_assoc();
 	$post_ID = $row["post_ID"]; 
-	// print_r($row); 
-	// echo $post_ID; 
-	return $post_ID; 
-} 
+	// print_r($row); echo $post_ID; 
+	return $post_ID; } // Used:  page.insert-redir.php, back-man
 // highest_post_ID_sess();
 function full_post_list_select1() {
 	$session_username = $_SESSION['username'];
 	$sql = "SELECT post_ID, post_title FROM dash_{$session_username}_posts ORDER BY post_ID DESC"; 
 	global $conn; 
 	$result = $conn->query($sql); 
-	return $result; 
-} 
+	return $result; } 
 function select_single_grid($post_author_username, $post_ID, $column) {
 	$sql = "SELECT $column FROM dash_{$post_author_username}_posts WHERE post_ID=$post_ID"; 
 	global $conn; 
 	$result = $conn->query($sql); 
 	$row = $result->fetch_assoc();
-	return $row["$column"]; 
-} 
+	return $row["$column"]; } 
 function attributes_parse($post_author_username, $post_ID) {
 	$attributes = select_single_grid($post_author_username, $post_ID, 'attributes');
-	$attributes_char_array = str_split($attributes); 
-	$pair = '';
-	foreach($attributes_char_array as $char) {
-		if ($char == ';') {
-			$key = strtok($pair, "=");
-			$value = strtok("=");
-			$attributes_assoc_array[$key] = $value;
-			$pair = '';
-		} else {
-			$pair = $pair . $char; 
-		}
-	}
-	return $attributes_assoc_array;
-}
+	$attributes_assoc_array = 字串关联数组($attributes); 
+	return $attributes_assoc_array; }
+function 字串关联数组($attributes) { $attributes_char_array = str_split($attributes); $pair = '';
+	foreach($attributes_char_array as $char) { if ($char == ';') { $key = strtok($pair, "="); $value = strtok("="); $attributes_assoc_array[$key] = $value; $pair = ''; } 
+		else {$pair = $pair.$char; /* echo $pair; */} 
+	} /* print_r($attributes_assoc_array); */
+	return $attributes_assoc_array; } // post-number, back-man # 
 /* This function will be called 9x every time post.post-number loads; monitor its E on load-times
 https://www.wordpress.materialinchess.com/2022/10/13/h2s34-speed-optimizations-for-wordpress/ */
 function check_private($url) {
@@ -84,22 +70,34 @@ function empty_link_slot($author, $post_ID) {
 	}
 	return 'null'; 
 } 
-function full_users_tb_select() {
-	$sql = "SELECT username FROM users_tb"; 
-	global $conn; 
-	$result = $conn->query($sql); 
-	return $result; 
-} 
-function fetch_password($username) {
-	$sql = "SELECT password FROM users_tb WHERE username='$username'"; 
-	global $conn; 
-	$result = $conn->query($sql); 
-	$row = $result->fetch_assoc();
-	return $row['password']; 
-}
+	
+function ins_row_gen($table_n, $columns_列, $values_列) /* WP.MIC-H2S37 */
+	{$sql_command = "INSERT INTO ".$table_n." (".implode($columns_列).") VALUES (".implode($values_列).")"; // assembly
+	global $conn; $conn->query($sql_command); // fire
+	echo $sql_command; echo "<br>".$conn->error;} // debuggers // Callings: insert-redir, backlog, media // src SQL.row-funcs,test.php
+	
+function update_row_any($table_n, $columns_列, $values_列, $index_col_列=array(), $index_val_列=array()) 
+{$sql_command = "UPDATE ".$table_n." SET "; for ($inx =0; $inx < count($columns_列); $inx++) { $sql_command .= $columns_列[$inx]."=".$values_列[$inx] /* Apostraph the $values in assembl # */; } if(count($index_col_列)==0) {} else { $sql_command .= " WHERE "; for ($inx =0; $inx < count($index_col_列); $inx++) { $sql_command .= $index_col_列[$inx]."=".$index_val_列[$inx];}} // assembly
+global $conn; $conn->query($sql_command); 
+echo $sql_command; echo "<br>".$conn->error;} // Callings: edit-redir, backlog, media
+
+function 选出_rows_any/*ref SQL.row-funcs,test*/($table_n,$行_列=array(),/*原因➡️*/$指标行列=array(),$指标经营列=array(),$指标val列=array(),$order=null)/*LIKE<e|经营;'%'<e|指标val*/
+{$sql命令="SELECT ";for($inx=0;$inx<count($行_列);$inx++){$sql命令.=$行_列[$inx];}$sql命令.=" FROM $table_n ";
+if(count($指标行列)!==0){$sql命令.=" WHERE ";for($inx=0;$inx<count($指标行列);$inx++){$sql命令.=$指标行列[$inx].' '.$指标经营列[$inx].' '.$指标val列[$inx];}}
+if(isset($order)){$sql命令.=' ORDER BY '.$order[0].' '.$order[1];}/*debug*/echo $sql命令;}
+
+// AJAX-rec,UPDATE:
+
+if(isset($_POST["fire"]))
+{ /* testing in backlog -> server.php, same level */ }
+
 ?>
 <!-- test-url: http://personal-dash/php_local_libs/mysql.query-inc.php --> 
 <!-- test-changelog: 
+12.31-22,5th.23:
+	Web testing: after a session_username was assigned from the start'd validate-redir, a sep.page-jump 🏀 w/ echo test returns "robert" # 
+
+=== earlier:
 	4:44 AM: added fetch_password() {
 		var_dump remotely retrievs an obj, displays the password string. 
 	4:21 AM: added full_users_tb_select() { 

@@ -1,65 +1,32 @@
-<html><head><style></style></head>
-<?php /* The following code will prevent any user, who is not the author, from seeing this page,
-including visitors; these other users will be redirected back to the display page, of the post. */
-include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
-$check_edit_perm_bool = check_edit_perm($_GET['author']);
-if ($check_edit_perm_bool != 1) {
-	header("Location: http://personal-dash/index.php");
-	// correct.header-redir: header("Location: post.post-number.php?post_ID=$post_ID"); 
-	// correct-URL: include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
-}?>
-<?php // Global-header:
-require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php';
-require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php'; 
-$attributes = attributes_parse($_GET['author'], $_GET['post_ID']); 
-if (isset($_GET['back_author'])) {
-	$back_author = $_GET['back_author'];
-	$back_ID = $_GET['back_ID'];
-}
-// print_r($attributes); ?>
-<body><h1>Dash-edit.php</h1>
-<a href="post.post-number.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>">Cancel</a> | 
-<a href="process-redir/log.out-redir">Log-out</a><br><br>
-<!-- // Form submission issue: when an apostraphe is included, text does not enter into db, and there's no feedback for user #
-Try WP.MIC-H2S35 H3S3 H4S6 later # -->
-<form action="process-redir/edit-mysql-redir.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>" method="post">
-Page name: <input type="text" name="post_title" value="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); ?>" minlength="1" maxlength="25">
-Private: <input type="checkbox" id="private" name="private" <?php if (array_key_exists("private", $attributes)) { 
-  if ($attributes["private"] == "true") {
-	echo "checked";
-	}
-}?> value="true">
-<p>Back_url: <input type="text" name="back_url" value="<?php if (isset($_GET['back_author'])) {
-echo 'http://personal-dash/post.post-number.php?&author=' . $back_author . '&post_ID=' . $back_ID;
-} else { ?>
-<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url'); 
-} ?>" minlength="1" maxlength="99"></p>
-<table><tr><th>Rank#</th><th>Text-field</th><th>URL-field</th><th>New-tab</th></tr>
-<?php for ($x = 1; $x <= 9; $x++) {
-	$url_column = 'url' . $x;
-	$text_column = 'text' . $x;?>
-  <tr><td><?php echo $x;?>:</td>
-  <td><input type="text" id="text<?php echo $x;?>" name="text<?php echo $x;?>" value="<?php
+<html><?php /* The following code will prevent any user, who is not the author, from seeing this page, including visitors; these other users will be redirected back to the display page, of the post. */
+require 'php_local_libs\mysql.query-inc.php'; include 'php_local_libs\login.functions-inc.php'; $check_edit_perm_bool = check_edit_perm($_GET['author']); if ($check_edit_perm_bool != 1) { header("Location: http://personal-dash/index.php"); } /* correct.header-redir: header("Location: post.post-number.php?post_ID=$post_ID"); correct-URL: include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php'; */ 
+/* Global-header: */ $attributes = attributes_parse($_GET['author'], $_GET['post_ID']); // print_r($attributes); 
+if (isset($_GET['back_author'])) { $back_author = $_GET['back_author'];	$back_ID = $_GET['back_ID']; } ?>
+<body onload="notes.selectionStart=10**7;notes.focus();" style="margin:10px;border-left:1px solid #2196F3;"><div style="margin-left:10px"><h1 style="display:inline;color:9F8E80;background-color:99A4AC">Dash-edit.php:</h1><p style="display:inline;margin-left:200px"><a href="post.post-number.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>">Cancel</a> | <a href="process-redir/log.out-redir"><i>Log-out</i></a></p>
+<!-- // Form submission issue: when an apostraphe is included, text does not enter into db, and there's no feedback for user # Try WP.MIC-H2S35 H3S3 H4S6 later # -->
+<form action="process-redir/edit-mysql-redir.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>" method="post" id="主式">
+<p>Private:<input type="checkbox" id="private" name="private" style="vertical-align:sub;"<?php if (array_key_exists("private", $attributes)) { if ($attributes["private"] == "true") { echo "checked"; }}?> value="true">Page name: <input style="margin-top:3px;width:150px" type="text" name="post_title" value="<?php $page_n = select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); echo $page_n; ?>" minlength="1" maxlength="25"> Back_<b>url</b>: <input type="text" name="back_url" style="width:140px" value="<?php if (isset($_GET['back_author'])) { echo 'post.post-number.php?&author=' . $back_author . '&post_ID=' . $back_ID; } else { echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url'); } ?>" minlength="1" maxlength="99">
+<table><tr><th><h4>Rank#</h4></th><th><h4>Text-field</h4></th><th><h4>URL-field</h4></th><th><h4 style="background-color:608ABD;color:CD8D5E">New-tab?</h4></th></tr></h4>
+<?php for ($x = 1; $x <= 9; $x++) { $url_column = 'url' . $x; $text_column = 'text' . $x;?><tr><td><?php echo $x;?>:</td>
+  <td><input style="width:160px" type="text" id="text<?php echo $x;?>" name="text<?php echo $x;?>" value="<?php
   // the updated text is not displayed, immediately after clicking save; the page has to be refreshed
   // however, I can circumvent this, by re-directing users back to the display page, following refresh # 
 	echo select_single_grid($_GET['author'], $_GET['post_ID'], $text_column);?>" minlength="1" maxlength="200"></td>
-  <td><input type="text" id="url<?php echo $x;?>" name="url<?php echo $x;?>" value="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], $url_column);?>" minlength="1" maxlength="1000"></td>
+  <td><input style="width:160px;background-color:80D52E"type="text" id="url<?php echo $x;?>" name="url<?php echo $x;?>" value="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], $url_column);?>" minlength="1" maxlength="1000"></td>
   <td><input type="checkbox" id="target<?php echo $x;?>" name="target<?php echo $x;?>" <?php if (array_key_exists("url$x", $attributes)) { 
-  if ($attributes["url$x"] == "_blank") {
-	echo "checked";
-	}
-}?> value="_blank"></td></tr>
-<?php }?></table><input type="submit" name="submit" value="Save"><br><br>
-Notes:<br>
-<textarea style="width:400px;min-height:200px;vertical-align: top;" type="text" id="notes" name="notes" minlength="1" maxlength="2000000"><?php
-  // the updated text is not displayed, immediately after clicking save; the page has to be refreshed
-  // however, I can circumvent this, by re-directing users back to the display page, following refresh # 
-	echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></textarea>
-</form></body></html>
+  if ($attributes["url$x"] == "_blank") { echo "checked"; } }?> value="_blank"></td></tr><?php }?></table>
+<h3 style="margin-bottom:-5px">Notes:</h3>
+<br><textarea style="width:400px;min-height:200px;vertical-align:top;" type="text" id="notes" name="notes" onfocus="document.getElementById('head_n').value = '∅'; document.getElementById('media_type').value = '∅';" minlength="1" maxlength="2000000"><?php
+  /* the updated text is not displayed, immediately after clicking save; the page has to be refreshed however, I can circumvent this, by re-directing users back to the display page, following refresh # */
+echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></textarea>
+<div style="margin-top:2px"><?php require 'php_local_libs/edit.panel-inc.php';?><input type="submit" style="background-color:23233F;color:7F2A57" name="submit" id="f7F2A57" value="Save"></div></form><?php echo_docs();?></div></body></html>
 <!-- dev.live-URL http://personal-dash/dash-edit.php?author=blind&post_ID=1 -->
 <!-- issues-list
 	$back_author is traced from a ghost-redir and requires from retri to swap<MIC># 
 <!-- Testing changelog, in reverse-chron:
+Late.22-6th.14:
+	Added CSS-inc, style sheet, distortion issues fixed w/ edit-panel; 
+		+3 HTTP-reqs, monitoring E on load time # 
 4:16 AM 11/5/22:
 	Added 2 get declarations for $backs
 	Added a second, non-redundant echo in the value attribute of Back_url form, using $backs. 
@@ -171,3 +138,7 @@ Notes:<br>
 	Dependency.test-1: check_edit_perm('blind');
 		Database update function continues to work. All tests passed. 
 -->
+<head><title>Edit<?php $discard = strtok($page_n, ":"); echo str_replace($discard, "", $page_n); ?></title></head>
+<script>bold.style = "position:absolute;top:675px;left:156px;background-color:black;height:30px;color:#FFFFFF"; italic.style = "position:absolute;top:675px;left:178px;background-color:blue;height:30px;color:white"; underline.style = "position:absolute;top:675px;left:196px;background-color:00FF00;height:30px;color:white"; console.log("test"); 
+for(let 选=1;选<10;选++){;if(document.getElementById("url"+选).value==''){document.getElementById("url"+选).style.backgroundColor='white'}}
+f7F2A57.addEventListener('click', function(){if(document.activeElement.id=='notes'){主式.action=主式.action+"&redir=notes";}})</script>

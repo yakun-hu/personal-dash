@@ -1,77 +1,51 @@
-<!-- in-line styling can also be applied, with php-encap<Turing!> to provide
-dynamic coloring, and other in-grid patterns, while keeping main squares -->
-<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
-  <link rel="stylesheet" href="php_local_libs/CSS-external.php"><style>
-table { border-collapse: collapse; }
-tr { height: 150px; }
-td { border: 1px solid #dddddd; text-align:left; width:130px; padding: 10px; }
-</style></head><body style="background-color:e6e0fc"><script src="script.js"></script>
+<!-- in-line styling can also be applied, with php-encap<Turing!> to provide dynamic coloring, and other in-grid patterns, while keeping main squares -->
+<html><head><style>table { border-collapse: collapse; } tr { height: 150px; } td { border: 1px solid #dddddd; text-align:left; width:130px; padding: 10px; }</style></head><body style="background-color:e6e0fc">
 <?php // Global requirements, for this script #, and variable declarations #:
-require 'C:\wamp64\www\personal-dash\php_local_libs\db.conn-inc.php'; 
-include 'C:\wamp64\www\personal-dash\php_local_libs\login.functions-inc.php';
-require 'C:\wamp64\www\personal-dash\php_local_libs\mysql.query-inc.php';
+require 'php_local_libs/mysql.query-inc.php'; include 'php_local_libs/login.functions-inc.php'; 
 $attributes = attributes_parse($_GET['author'], $_GET['post_ID']); 
 // Immediate redir will be placed here #
 $check_edit_perm_bool = check_edit_perm($_GET['author']);
-if ($check_edit_perm_bool != 1) {
-	if (array_key_exists("private", $attributes)) { 
-		if ($attributes["private"] == "true") {
-			header("Location: http://personal-dash/index.php");
-		}
-	}
-}
-// require 'db-lib.php'; shelved for the moment due to #  Notice: Undefined variable: conn in C:\wamp64\www\personal-dash\db-lib.php on line 7
-/* 淘汰: $post_author_username = $_GET['author'];
- $post_ID = $_GET['post_ID']; */
-?>
-  <h3><?php echo 'Page-name: ' . select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); ?></h3>
+if ($check_edit_perm_bool != 1) { if (array_key_exists("private", $attributes)) { if ($attributes["private"] == "true") { ?><script>window.open('index.php', '_self');</script><?php }}} // blind&post_ID=563
+/* require 'db-lib.php'; shelved for the moment due to # Notice: Undefined variable: conn in C:\wamp64\www\personal-dash\db-lib.php on line 7淘汰: $post_author_username = $_GET['author']; $post_ID = $_GET['post_ID']; */ ?>
+<h3><?php echo 'Page-name: ' . select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); ?></h3>
 <!-- After implementing $post_ID, and URL appends, the next link will need to call the $post_ID variable, as an append #  -->
-<p><a href="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url');?>">Back</a> |
+<p><a id="后_btn" href="<?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'back_url');?>">Back</a> |
 <a <?php if ($check_edit_perm_bool != 1) { 	echo 'hidden'; }?> 
-href="dash-edit.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>"> Edit</a> | 
+href="dash-edit.php?author=<?php echo $_GET['author']; ?>&post_ID=<?php echo $_GET['post_ID']; ?>" id="edit_btn"> Edit</a> | 
 <a <?php $logged_in_binary_bool = logged_in_binary(); 
 if ($logged_in_binary_bool != 1) { echo 'hidden'; } ?> 
 href="page.create-form.php?back_author=<?php echo $_GET['author']; ?>&back_ID=<?php echo $_GET['post_ID']; ?>">(+) New-page</a> | 
-<?php if ($logged_in_binary_bool == 1) {?>
-<a href="../process-redir/log.out-redir">Log-out</a>
-<?php }
-else { ?>
-<a href="../login.php">Log-in</a>
-<?php } ?> | <a href="index.php">Index</a> | <a href="https://www.baidu.com/" target="_blank">Baidu</a></p>
-<table style="border-width:2px;border-style:solid;border-color:#2a2a2a;background-color:f1eff9; padding:2px"><?php $entry_count_9 = 0;
-$row_count_3 = 1;
-while ($row_count_3 <= 3) {
-	$count_container_2 = $row_count_3++;?><tr style="border-bottom:2px solid #b3b3b3"><?php
-	$column_count_3 = 1; 
-	while ($column_count_3 <= 3) {
-		// echo $entry_count_9;
-		$count_container = $column_count_3++;
-		$url_column = 'url' . ++$entry_count_9; 
-		$text_column = 'text' . $entry_count_9; ?>
-			<td><?php echo $entry_count_9; ?>: 
-
+<?php if ($logged_in_binary_bool == 1) {?><a href="../process-redir/log.out-redir">Log-out</a><?php } else { ?><a href="../login.php">Log-in</a>
+<?php } ?> | <a href="index.php">Index</a> | <a href="inner-RAM/后卫.php?板=prom&pg_数=1#布告" target="blank">To-do</a></p>
+<table style="border-width:2px;border-style:solid;border-color:#2a2a2a;background-color:f1eff9; padding:2px"><?php $口计_9 = 0; $row_count_3 = 1;
+while ($row_count_3 <= 3) { $count_container_2 = $row_count_3++;?><tr style="border-bottom:2px solid #b3b3b3"><?php	$column_count_3 = 1; 
+while ($column_count_3 <= 3) {
+		// echo $口计_9;
+		$count_container = $column_count_3++; $url_column = 'url' . ++$口计_9; $text_column = 'text' . $口计_9; ?>
+		<td><?php echo $口计_9; ?>:
+		
 <?php $url = select_single_grid($_GET['author'], $_GET['post_ID'], $url_column);
 if (check_private($url) && $check_edit_perm_bool != 1) { echo "🔒:";	} else { ?>
 <!-- check_private controller target start -->			
-			<a href="<?php echo $url;?>" data-type="URL" <?php if (array_key_exists("url$entry_count_9", $attributes)) { 
-			if ($attributes["url$entry_count_9"] == "_blank") {
-	echo 'target="_blank"';
-	$internal = 'off';
-	}
-} else {
-	$internal = 'on';
-	}
+		<a style="font-size:16;font-family: Times New Roman;" id="<?php echo $口计_9; ?>前"href="<?php echo $url;?>" data-type="URL" <?php if (array_key_exists("url$口计_9", $attributes)) { 
+		if ($attributes["url$口计_9"] == "_blank") { echo 'target="_blank"'; $internal = 'off'; }
+		} else { $internal = 'on'; }
  ?> ><?php $display_text = select_single_grid($_GET['author'], $_GET['post_ID'], $text_column); echo $display_text?></a>
 <?php if ($display_text != "") { if ($internal == 'on') { echo '[i]'; } else { echo '↗️'; } } } ?>
 <!-- controller target end --></td><?php }?></tr><?php }?></table>
-<h3>Notes:</h3><div style="width:420px;background-color:f1eff9;padding:10px"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></div></body></html>
+<h3>Notes:</h3><div onmousedown="document.getElementById('notes').style.backgroundColor = 'FFFFFF';" onmouseup="document.getElementById('notes').style.backgroundColor = 'f1eff9';" style="width:420px;background-color:f1eff9;padding:10px" id="notes"><?php echo select_single_grid($_GET['author'], $_GET['post_ID'], 'notes');?></div></body></html>
 <title><?php $title = select_single_grid($_GET['author'], $_GET['post_ID'], 'post_title'); $discard = strtok($title, ":"); echo strtok(":"); ?></title><!-- Condense this later -->
+<script>document.addEventListener('keydown',function(键){if (键.key==='e'&&键.ctrlKey){edit_btn.click();键.preventDefault();}else if (键.key==='Backspace'&&键.altKey){/*id*/后_btn.click();}/*deeper-spec highs in exec-order*/else if (键.altKey){document.getElementById(键.key+"前").click();}})</script>
 <!-- dev.live-URL http://personal-dash/post.post-number.php?author=blind&post_ID=1 -->
 <!-- Issue-list:
 	12.31-22,4th.22: Resolved: Notes-body was encapsulated in <p>, broken by any double-ended HTML; replaced these <p>en-caps with <div>, fixed # 
 	Adding a padding of 10px to all<td>expanded each grid width by 20; decreasing<td>width to 130 restored the original proportions #hack 😱-->
 <!-- Testing changelog, in reverse-chron:
+12.31-22,6th.17!
+	Deprec'd window.open to repl header-loc PHP due to static-interf | https://stackoverflow.com/a/8028987/20256608
+	https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key https://www.w3schools.com/jsref/obj_mouseevent.asp https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event
+	Late-22: The event name. Do not use the "on" prefix<mal-pr>Eg: Use "click" instead of "onclick". https://www.w3schools.com/jsref/met_document_addeventlistener.asp
+		Hu: .key and .ctrlKey etc are reg'd sept, where .key is a strval, and .ctrlKey a bool # Updated css-external w/ log-Sel's<WP.MIC>
 3:55 AM 11/5/22:
 	Changed name of URL gets to back_author, back_ID. 
 		Test passed: URL get params changed, successfully. 
